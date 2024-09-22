@@ -14,6 +14,7 @@ class NoExamplesException(Exception):
 import time
 from PIL import Image
 import io
+import os
 
 ###Variables
 #Drivers
@@ -38,17 +39,49 @@ submit_xpath = '/html/body/div[2]/div[2]/div/div[1]/div/div/div[3]/form/p[2]/inp
 kanji_png_path = './img/kanji_character.png'
 examples_png_path = './img/kanji_examples.png'
 
+# def initialize_driver():
+#     global driver
+#     global default_wait
+#     firefox_options = Options()
+#     #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+#     firefox_options.binary_location = r"C:\Users\delro\JapaneseStudyBot\JapaneseStudyApplication\JapaneseStudyBot\firefox\firefox.exe"
+#     firefox_options.add_argument('--headless')
+#     geckodriver_path = './gecko/geckodriver.exe'
+#     firefox_service = FirefoxService(executable_path=geckodriver_path)
+#     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
+#     default_wait = WebDriverWait(driver, 6)  # Wait up to 10 seconds
+
 def initialize_driver():
     global driver
     global default_wait
-    firefox_options = Options()
-    #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-    firefox_options.binary_location = r"/app/vendor/firefox/firefox"
-    firefox_options.add_argument('--headless')
-    geckodriver_path = './gecko/geckodriver.exe'
-    firefox_service = FirefoxService(executable_path=geckodriver_path)
-    driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
-    default_wait = WebDriverWait(driver, 6)  # Wait up to 10 seconds
+
+    options = webdriver.FirefoxOptions()
+
+    # Enable trace level for debugging
+    options.log.level = "trace"
+
+    # Add headless mode and sandboxing options for running in a cloud environment
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+
+    # Set the binary location using options
+    options.binary_location = os.environ.get('FIREFOX_BIN', "/app/vendor/firefox/firefox")
+
+    # Set the path to the geckodriver executable
+    geckodriver_path = os.environ.get('GECKODRIVER_PATH', "/app/vendor/geckodriver")
+
+    # Initialize the driver
+    driver = webdriver.Firefox(
+        service=FirefoxService(executable_path=geckodriver_path),
+        options=options
+    )
+
+    # Set a default wait time for elements to appear
+    default_wait = WebDriverWait(driver, 6)  # Wait up to 6 seconds
+
+    return driver
+ 
 
 #grade can be "All", "N5", "N4", "N3", "N2", "N1", "1", "2", "3", "4", "5", "6"
 def scrape_kanji_info(grade):
