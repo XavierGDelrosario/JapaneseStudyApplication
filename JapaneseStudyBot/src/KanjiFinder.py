@@ -69,8 +69,8 @@ def initialize_driver():
     options.binary_location = os.environ.get('FIREFOX_BIN', "/app/vendor/firefox/firefox")
 
     # Set the path to the geckodriver executable
-    geckodriver_path = os.environ.get('GECKODRIVER_PATH', "/app/vendor/geckodriver")
-
+    #geckodriver_path = os.environ.get('GECKODRIVER_PATH', "/app/vendor/geckodriver")
+    geckodriver_path = './gecko/geckodriver.exe'
     # Initialize the driver
     driver = webdriver.Firefox(
         service=FirefoxService(executable_path=geckodriver_path),
