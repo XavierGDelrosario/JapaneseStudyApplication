@@ -22,6 +22,7 @@ class MyClient(discord.Client):
     n3_id = 1287322367068209195
     n4_id = 1287322385422352489
     n5_id = 1287322399485857814
+    
     def __init__(self, **options):
         super().__init__(intents=intents, **options)
         self.scheduler = AsyncIOScheduler()
