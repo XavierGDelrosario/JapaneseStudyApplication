@@ -42,7 +42,8 @@ def initialize_driver():
     global driver
     global default_wait
     firefox_options = Options()
-    firefox_options.binary_location = r'/app/.heroku/firefox/firefox'
+    #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+    firefox_options.binary_location = r"/app/vendor/firefox/firefox"
     firefox_options.add_argument('--headless')
     geckodriver_path = './gecko/geckodriver.exe'
     firefox_service = FirefoxService(executable_path=geckodriver_path)
