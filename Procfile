@@ -1,0 +1,1 @@
+worker: python JapaneseStudyBot/src/Discordbot.py
