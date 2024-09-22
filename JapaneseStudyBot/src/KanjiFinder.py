@@ -203,6 +203,6 @@ def get_kanji_info():
 
 #result = search_images('絢')
 
-result = search_images('乃')
-print(result)
+#result = search_images('乃')
+#print(result)
 #search_images('絢')
