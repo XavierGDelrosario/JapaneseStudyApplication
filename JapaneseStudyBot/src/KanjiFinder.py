@@ -6,15 +6,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
+import time
+from PIL import Image
+import io
+import os
 class NoExamplesException(Exception):
     def __init__(self, message="No examples found."):
         self.message = message
         super().__init__(self.message)
 
-import time
-from PIL import Image
-import io
-import os
 
 ###Variables
 #Drivers
@@ -43,20 +43,17 @@ def initialize_driver():
     global driver
     global default_wait
     firefox_options = Options()
-<<<<<<< HEAD
-    firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-    #firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
-    geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
-=======
-    #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
 
-    firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
-    geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
->>>>>>> df4ffaf079e7de4385c06bc1535fd2467d3b776f
+    #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+    firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
+    geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
+
+    #firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
+    #geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
-    default_wait = WebDriverWait(driver, 6)  # Wait up to 10 seconds
+    default_wait = WebDriverWait(driver, 6)  
 
 
 #grade can be "All", "N5", "N4", "N3", "N2", "N1", "1", "2", "3", "4", "5", "6"
@@ -203,12 +200,9 @@ def get_kanji_info():
         raise Exception
 
 # Test
-<<<<<<< HEAD
-result = search_images('絢')
-result = search_images('乃')
-#print(result)
-=======
+
+#result = search_images('絢')
+
 result = search_images('乃')
 print(result)
 #search_images('絢')
->>>>>>> df4ffaf079e7de4385c06bc1535fd2467d3b776f
