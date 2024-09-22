@@ -43,9 +43,16 @@ def initialize_driver():
     global driver
     global default_wait
     firefox_options = Options()
+<<<<<<< HEAD
     firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
     #firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
     geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
+=======
+    #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+
+    firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
+    geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
+>>>>>>> df4ffaf079e7de4385c06bc1535fd2467d3b776f
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
@@ -196,6 +203,12 @@ def get_kanji_info():
         raise Exception
 
 # Test
+<<<<<<< HEAD
 result = search_images('絢')
 result = search_images('乃')
 #print(result)
+=======
+result = search_images('乃')
+print(result)
+#search_images('絢')
+>>>>>>> df4ffaf079e7de4385c06bc1535fd2467d3b776f
