@@ -54,7 +54,7 @@ def initialize_driver():
     #geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
 
     firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
-    geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
+    geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver')
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
