@@ -63,7 +63,7 @@ def extract_archive(archive_path, extract_to):
         raise ValueError("Unsupported file type. Only .tar.gz or .tar.bz2 are supported.")
 #Setup 
 firefox_archive_path = os.path.join(os.path.dirname(__file__), '..','firefox', 'firefox-130.0.1.tar.bz2')
-geckodriver_archive_path = os.path.join(os.path.dirname(__file__), '..', 'geckodriver', 'geckodriver.tar.gz')
+geckodriver_archive_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.tar.gz')
 firefox_extract_to = os.path.join(os.path.dirname(__file__), '..', 'firefox') 
 geckodriver_extract_to = os.path.join(os.path.dirname(__file__), '..', 'geckodriver') 
 firefox_binary_path = os.path.join(firefox_extract_to, 'firefox')  
