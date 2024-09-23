@@ -10,6 +10,11 @@ import time
 from PIL import Image
 import io
 import os
+import boto3
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
+
 class NoExamplesException(Exception):
     def __init__(self, message="No examples found."):
         self.message = message
@@ -198,11 +203,40 @@ def get_kanji_info():
     except Exception as e:
         print(f"Error: {e}")
         raise Exception
+    
+def download_s3_folder(bucket_name, s3_folder, local_dir):
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id= os.getenv("ACCESS_KEY"),
+        aws_secret_access_key=os.getenv("SECRET_KEY")
+    )
+    # Ensure the local directory exists
+    if not os.path.exists(local_dir):
+        os.makedirs(local_dir)
+
+    # List objects in the specified S3 folder
+    paginator = s3.get_paginator('list_objects_v2')
+    for page in paginator.paginate(Bucket=bucket_name, Prefix=s3_folder):
+        for obj in page.get('Contents', []):
+            # Get the object key
+            key = obj['Key']
+            # Create a local path
+            local_file_path = os.path.join(local_dir, os.path.relpath(key, s3_folder))
+            # Ensure the directory structure exists
+            os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+            # Download the file
+            s3.download_file(bucket_name, key, local_file_path)
+            print(f'Downloaded {key} to {local_file_path}')
+bucket_name = 'studybotfirefox'
+s3_folder = 'Mozilla Firefox/'  # The folder in your S3 bucket
+local_dir = './JapaneseStudyBot/firefox'  # Local directory to save the files
+
+
+
+download_s3_folder(bucket_name, s3_folder, local_dir)
 
 # Test
-
 #result = search_images('絢')
-
 #result = search_images('乃')
 #print(result)
 #search_images('絢')
