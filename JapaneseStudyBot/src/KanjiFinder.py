@@ -65,10 +65,10 @@ def extract_archive(archive_path, extract_to):
 firefox_archive_path = os.path.join(os.path.dirname(__file__), '..','firefox', 'firefox-130.0.1.tar.bz2')
 geckodriver_archive_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.tar.gz')
 firefox_extract_to = os.path.join(os.path.dirname(__file__), '..', 'firefox') 
-geckodriver_extract_to = os.path.join(os.path.dirname(__file__), '..', 'geckodriver') 
-firefox_binary_path = os.path.join(firefox_extract_to, 'firefox')  
-geckodriver_path = os.path.join(geckodriver_extract_to, 'geckodriver')  
-
+geckodriver_extract_to = os.path.join(os.path.dirname(__file__), '..', 'gecko') 
+firefox_binary_path = os.path.join(firefox_extract_to, 'firefox', 'firefox')  
+geckodriver_path = os.path.join(geckodriver_extract_to, 'gecko', 'geckodriver')  
+print(firefox_binary_path)
 extract_archive(firefox_archive_path, firefox_extract_to)
 extract_archive(geckodriver_archive_path, geckodriver_extract_to)
 
