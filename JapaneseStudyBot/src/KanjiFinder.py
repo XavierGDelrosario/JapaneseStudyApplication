@@ -50,11 +50,11 @@ def initialize_driver():
     firefox_options = Options()
 
     #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-    firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
-    geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
+    #firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
+    #geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
 
-    #firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
-    #geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
+    firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
+    geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
@@ -233,7 +233,7 @@ local_dir = './JapaneseStudyBot/firefox'  # Local directory to save the files
 
 
 
-download_s3_folder(bucket_name, s3_folder, local_dir)
+#download_s3_folder(bucket_name, s3_folder, local_dir)
 
 # Test
 #result = search_images('絢')
