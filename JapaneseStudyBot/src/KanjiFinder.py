@@ -67,8 +67,7 @@ extract_archive(firefox_archive_path, firefox_extract_to)
 extract_archive(geckodriver_archive_path, geckodriver_extract_to)
 
 def initialize_driver():
-    global driver
-    global default_wait
+    
     firefox_options = Options()
 
     #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
@@ -76,6 +75,8 @@ def initialize_driver():
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     try:
+        global driver
+        global default_wait
         driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
         default_wait = WebDriverWait(driver, 6)  
     except OSError as e:
