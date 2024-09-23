@@ -81,8 +81,10 @@ def initialize_driver():
         default_wait = WebDriverWait(driver, 6)  
     except OSError as e:
         logging.error(f"OS error:{e}")
+        raise OSError(f"Driver setup failure:{e}")
     except Exception as e:
         logging.error(f"Driver setup error:{e}")
+        raise Exception(f"Driver setup failure:{e}")
 
 
 #grade can be "All", "N5", "N4", "N3", "N2", "N1", "1", "2", "3", "4", "5", "6"
