@@ -72,7 +72,8 @@ def initialize_driver():
 
     #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
     firefox_options.binary_location = firefox_binary_path
-    firefox_options.add_argument('--headless')
+    #firefox_options.add_argument('--headless')
+    firefox_options.log.level = "trace"
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     try:
         global driver
