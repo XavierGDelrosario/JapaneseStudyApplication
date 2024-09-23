@@ -13,8 +13,6 @@ import os
 from dotenv import load_dotenv
 import tarfile
 import logging
-import subprocess
-import selenium
 
 logging.basicConfig(level=logging.INFO)
 load_dotenv()  # Load environment variables from .env file
@@ -232,28 +230,6 @@ def get_kanji_info():
     except Exception as e:
         print(f"Error: {e}")
         raise Exception
-
-
-
-
-def get_firefox_version():
-    try:
-        version = subprocess.check_output(["firefox", "--version"], stderr=subprocess.STDOUT)
-        return version.decode().strip()
-    except Exception as e:
-        return f"Error getting Firefox version: {e}"
-
-def get_geckodriver_version(geckodriver_path):
-    try:
-        version = subprocess.check_output([geckodriver_path, "--version"], stderr=subprocess.STDOUT)
-        return version.decode().strip()
-    except Exception as e:
-        return f"Error getting geckodriver version: {e}"
-
-print(f"Firefox Version: {get_firefox_version()}")
-print(f"Geckodriver Version: {get_geckodriver_version(geckodriver_path)}")
-print(f"Selenium Version: {selenium.__version__}")
-raise Exception(f"Firefox Version: {get_firefox_version()}, Geckodriver Version: {get_geckodriver_version(geckodriver_path)}, Selenium Version: {selenium.__version__}")
 
 # Test
 #result = search_images('絢')
