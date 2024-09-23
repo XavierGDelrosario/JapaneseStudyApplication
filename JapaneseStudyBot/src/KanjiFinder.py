@@ -253,8 +253,7 @@ def get_geckodriver_version(geckodriver_path):
 print(f"Firefox Version: {get_firefox_version()}")
 print(f"Geckodriver Version: {get_geckodriver_version(geckodriver_path)}")
 print(f"Selenium Version: {selenium.__version__}")
-raise Exception(f"Firefox Version: {get_firefox_version()}, Geckodriver Version: {get_geckodriver_version(geckodriver_path)},
-      Selenium Version: {selenium.__version__}")
+raise Exception(f"Firefox Version: {get_firefox_version()}, Geckodriver Version: {get_geckodriver_version(geckodriver_path)}, Selenium Version: {selenium.__version__}")
 
 # Test
 #result = search_images('絢')
