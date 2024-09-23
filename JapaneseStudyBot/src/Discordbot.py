@@ -8,6 +8,7 @@ from KanjiFinder import NoExamplesException
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()  # Load environment variables from .env file
 
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -92,7 +93,7 @@ class MyClient(discord.Client):
                 except NoExamplesException as e:
                     await channel.send(file=discord.File(self.kanji_png_path))
                 except Exception as e:
-                    print(f'Error occurred: {e}')
+                    print(f'Error occurred at daily: {e}')
    
 client = MyClient()
 client.run(TOKEN)

@@ -10,10 +10,11 @@ import time
 from PIL import Image
 import io
 import os
-import boto3
 from dotenv import load_dotenv
 import tarfile
+import logging
 
+logging.basicConfig(level=logging.INFO)
 load_dotenv()  # Load environment variables from .env file
 
 class NoExamplesException(Exception):
@@ -53,14 +54,6 @@ submit_xpath = '/html/body/div[2]/div[2]/div/div[1]/div/div/div[3]/form/p[2]/inp
 kanji_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_character.png')
 examples_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_examples.png')
 
-def extract_archive(archive_path, extract_to):
-    """Extracts a tar.gz or tar.bz2 file."""
-    if archive_path.endswith(('.tar.gz', '.tar.bz2')):
-        with tarfile.open(archive_path, 'r:*') as archive:
-            archive.extractall(path=extract_to)
-        print(f"Extracted {archive_path} to {extract_to}")
-    else:
-        raise ValueError("Unsupported file type. Only .tar.gz or .tar.bz2 are supported.")
 #Setup 
 firefox_archive_path = os.path.join(os.path.dirname(__file__), '..','firefox', 'firefox-130.0.1.tar.bz2')
 geckodriver_archive_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.tar.gz')
@@ -82,8 +75,13 @@ def initialize_driver():
     firefox_options.binary_location = firefox_binary_path
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
-    driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
-    default_wait = WebDriverWait(driver, 6)  
+    try:
+        driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
+        default_wait = WebDriverWait(driver, 6)  
+    except OSError as e:
+        logging.error(f"OS error:{e}")
+    except Exception as e:
+        logging.error(f"Driver setup error:{e}")
 
 
 #grade can be "All", "N5", "N4", "N3", "N2", "N1", "1", "2", "3", "4", "5", "6"
@@ -111,10 +109,10 @@ def scrape_kanji_images(grade):
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error at scrape images: {e}")
+        logging.error(f"Error at scrape images: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error at scrape images: {e}")
+        logging.error(f"Error at scrape images: {e}")
         raise Exception
     finally:
         driver.quit()
@@ -133,10 +131,10 @@ def search_images(kanji):
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error at search images: {e}")
+        logging.error(f"Error at search images: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error at search images: {e}")
+        logging.error(f"Error at search images: {e}")
         raise Exception
     finally:
         driver.quit()
@@ -171,10 +169,10 @@ def get_images():
         kanji_character_png_element.screenshot(kanji_png_path)
         result['kanji_image_path'] = kanji_png_path
     except NoSuchElementException as e:
-        print(f"Error at getImages kanji image: {e}")
+        logging.error(f"Error at getImages kanji image: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error at getImages kanji image: {e}")
+        logging.error(f"Error at getImages kanji image: {e}")
         raise Exception
     try:
         examples = default_wait.until(EC.presence_of_all_elements_located(("xpath", f'{examples_xpath}/*')))  # Get all children of the <ul>
@@ -200,10 +198,10 @@ def get_images():
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error at getImages: {e}")
+        logging.error(f"Error at getImages: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error at getImages: {e}")
+        logging.error(f"Error at getImages: {e}")
         raise Exception
 
 #assumes driver is loaded and page is
@@ -231,6 +229,6 @@ def get_kanji_info():
 
 # Test
 #result = search_images('絢')
-#result = search_images('乃')
-#print(result)
+result = search_images('乃')
+print(result)
 #search_images('絢')
