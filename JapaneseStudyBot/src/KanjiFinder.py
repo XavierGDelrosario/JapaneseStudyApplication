@@ -12,6 +12,7 @@ import io
 import os
 import boto3
 from dotenv import load_dotenv
+import tarfile
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -20,7 +21,15 @@ class NoExamplesException(Exception):
         self.message = message
         super().__init__(self.message)
 
-
+def extract_archive(archive_path, extract_to):
+    """Extracts a tar.gz or tar.bz2 file."""
+    if archive_path.endswith(('.tar.gz', '.tar.bz2')):
+        with tarfile.open(archive_path, 'r:*') as archive:
+            archive.extractall(path=extract_to)
+        print(f"Extracted {archive_path} to {extract_to}")
+    else:
+        raise ValueError("Unsupported file type. Only .tar.gz or .tar.bz2 are supported.")
+    
 ###Variables
 #Drivers
 driver = None 
@@ -44,17 +53,32 @@ submit_xpath = '/html/body/div[2]/div[2]/div/div[1]/div/div/div[3]/form/p[2]/inp
 kanji_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_character.png')
 examples_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_examples.png')
 
+def extract_archive(archive_path, extract_to):
+    """Extracts a tar.gz or tar.bz2 file."""
+    if archive_path.endswith(('.tar.gz', '.tar.bz2')):
+        with tarfile.open(archive_path, 'r:*') as archive:
+            archive.extractall(path=extract_to)
+        print(f"Extracted {archive_path} to {extract_to}")
+    else:
+        raise ValueError("Unsupported file type. Only .tar.gz or .tar.bz2 are supported.")
+#Setup 
+firefox_archive_path = os.path.join(os.path.dirname(__file__), '..','firefox', 'firefox-130.0.1.tar.bz2')
+geckodriver_archive_path = os.path.join(os.path.dirname(__file__), '..', 'geckodriver', 'geckodriver.tar.gz')
+firefox_extract_to = os.path.join(os.path.dirname(__file__), '..', 'firefox') 
+geckodriver_extract_to = os.path.join(os.path.dirname(__file__), '..', 'geckodriver') 
+firefox_binary_path = os.path.join(firefox_extract_to, 'firefox')  
+geckodriver_path = os.path.join(geckodriver_extract_to, 'geckodriver')  
+
+extract_archive(firefox_archive_path, firefox_extract_to)
+extract_archive(geckodriver_archive_path, geckodriver_extract_to)
+
 def initialize_driver():
     global driver
     global default_wait
     firefox_options = Options()
 
     #firefox_options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-    firefox_options.binary_location = './JapaneseStudyBot/firefox/firefox.exe'
-    geckodriver_path = './JapaneseStudyBot/gecko/geckodriver.exe'
-
-    #firefox_options.binary_location = os.path.join(os.path.dirname(__file__), '..', 'firefox', 'firefox.exe')
-    #geckodriver_path = os.path.join(os.path.dirname(__file__), '..', 'gecko', 'geckodriver.exe')
+    firefox_options.binary_location = firefox_binary_path
     firefox_options.add_argument('--headless')
     firefox_service = FirefoxService(executable_path=geckodriver_path)
     driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
@@ -228,12 +252,9 @@ def download_s3_folder(bucket_name, s3_folder, local_dir):
             s3.download_file(bucket_name, key, local_file_path)
             print(f'Downloaded {key} to {local_file_path}')
 bucket_name = 'studybotfirefox'
-s3_folder = 'Mozilla Firefox/'  # The folder in your S3 bucket
-local_dir = './JapaneseStudyBot/firefox'  # Local directory to save the files
-
-
-
-download_s3_folder(bucket_name, s3_folder, local_dir)
+s3_folder = 'Mozilla Firefox/'  
+local_dir = './JapaneseStudyBot/firefox' 
+#download_s3_folder(bucket_name, s3_folder, local_dir)
 
 # Test
 #result = search_images('絢')
