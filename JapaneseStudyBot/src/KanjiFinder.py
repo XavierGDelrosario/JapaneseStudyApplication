@@ -94,7 +94,7 @@ def scrape_kanji_info(grade):
     try:
         return get_kanji_info()
     except NoSuchElementException as e:
-        print(f"Error: {e}")
+        print(f"Error : {e}")
         raise NoSuchElementException
     except Exception as e:
         print(f"Error: {e}")
@@ -111,10 +111,10 @@ def scrape_kanji_images(grade):
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error: {e}")
+        print(f"Error at scrape images: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error at scrape images: {e}")
         raise Exception
     finally:
         driver.quit()
@@ -133,10 +133,10 @@ def search_images(kanji):
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error: {e}")
+        print(f"Error at search images: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error at search images: {e}")
         raise Exception
     finally:
         driver.quit()
@@ -171,10 +171,10 @@ def get_images():
         kanji_character_png_element.screenshot(kanji_png_path)
         result['kanji_image_path'] = kanji_png_path
     except NoSuchElementException as e:
-        print(f"Error: {e}")
+        print(f"Error at getImages kanji image: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error at getImages kanji image: {e}")
         raise Exception
     try:
         examples = default_wait.until(EC.presence_of_all_elements_located(("xpath", f'{examples_xpath}/*')))  # Get all children of the <ul>
@@ -200,10 +200,10 @@ def get_images():
     except NoExamplesException as e:
         raise NoExamplesException
     except NoSuchElementException as e:
-        print(f"Error: {e}")
+        print(f"Error at getImages: {e}")
         raise NoSuchElementException
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error at getImages: {e}")
         raise Exception
 
 #assumes driver is loaded and page is
@@ -228,34 +228,6 @@ def get_kanji_info():
     except Exception as e:
         print(f"Error: {e}")
         raise Exception
-    
-def download_s3_folder(bucket_name, s3_folder, local_dir):
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id= os.getenv("ACCESS_KEY"),
-        aws_secret_access_key=os.getenv("SECRET_KEY")
-    )
-    # Ensure the local directory exists
-    if not os.path.exists(local_dir):
-        os.makedirs(local_dir)
-
-    # List objects in the specified S3 folder
-    paginator = s3.get_paginator('list_objects_v2')
-    for page in paginator.paginate(Bucket=bucket_name, Prefix=s3_folder):
-        for obj in page.get('Contents', []):
-            # Get the object key
-            key = obj['Key']
-            # Create a local path
-            local_file_path = os.path.join(local_dir, os.path.relpath(key, s3_folder))
-            # Ensure the directory structure exists
-            os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
-            # Download the file
-            s3.download_file(bucket_name, key, local_file_path)
-            print(f'Downloaded {key} to {local_file_path}')
-bucket_name = 'studybotfirefox'
-s3_folder = 'Mozilla Firefox/'  
-local_dir = './JapaneseStudyBot/firefox' 
-#download_s3_folder(bucket_name, s3_folder, local_dir)
 
 # Test
 #result = search_images('絢')
