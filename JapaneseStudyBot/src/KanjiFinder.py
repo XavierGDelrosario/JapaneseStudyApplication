@@ -70,11 +70,10 @@ def initialize_driver():
     
     firefox_options = Options()
     firefox_options.add_argument('--headless')
-    firefox_service = FirefoxService(executable_path=geckodriver_path)
     try:
         global driver
         global default_wait
-        driver = webdriver.Firefox(service=firefox_service, options=firefox_options)
+        driver = webdriver.Firefox(options=firefox_options)
         default_wait = WebDriverWait(driver, 6)  
     except OSError as e:
         logging.error(f"OS error:{e}")
