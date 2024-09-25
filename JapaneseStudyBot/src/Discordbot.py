@@ -4,7 +4,6 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from KanjiFinder import scrape_kanji_images
 from KanjiFinder import search_images
-from KanjiFinder import NoExamplesException
 import os
 from dotenv import load_dotenv
 
@@ -15,8 +14,6 @@ intents = discord.Intents.default()
 intents.messages = True  # Enable message intents
 
 class MyClient(discord.Client):
-    kanji_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_character.png')
-    examples_png_path = os.path.join(os.path.dirname(__file__), '..', 'img', 'kanji_examples.png')
     n1_id = 1287322325242482719
     n2_id = 1287322342195859467
     n3_id = 1287322367068209195
@@ -49,15 +46,15 @@ class MyClient(discord.Client):
 
     async def handle_random(self, message):
         try:
+            result = {}
             message_parts = message.content.split()
             if len(message_parts) < 2:
-                scrape_kanji_images("All")
+                result = scrape_kanji_images("All")
             else:
-                scrape_kanji_images(message_parts[1])
-            await message.channel.send(file=discord.File(self.kanji_png_path))
-            await message.channel.send(file=discord.File(self.examples_png_path))
-        except NoExamplesException as e:
-            await message.channel.send(file=discord.File(self.kanji_png_path))
+                result = scrape_kanji_images(message_parts[1].upper())
+            await message.channel.send(file=discord.File(result['kanji_image_path']))
+            if os.path.exists(result['kanji_examples_path']):
+                await message.channel.send(file=discord.File(result['kanji_examples_path']))
         except NoSuchElementException as e:
             await message.channel.send("Invalid command")
         except Exception as e:
@@ -65,16 +62,16 @@ class MyClient(discord.Client):
 
     async def handle_search(self, message):
         try:
+            result = {}
             message_parts = message.content.split()
             if len(message_parts) < 2:
                 raise ValueError()
-            search_images(message_parts[1])
-            await message.channel.send(file=discord.File(self.kanji_png_path))
-            await message.channel.send(file=discord.File(self.examples_png_path))
+            result = search_images(message_parts[1])
+            await message.channel.send(file=discord.File(result['kanji_image_path']))
+            if os.path.exists(result['kanji_examples_path']):
+                await message.channel.send(file=discord.File(result['kanji_examples_path']))
         except ValueError as e:
             raise
-        except NoExamplesException as e:
-            await message.channel.send(file=discord.File(self.kanji_png_path))
         except NoSuchElementException as e:
             await message.channel.send("Invalid command")
         except Exception as e:
@@ -86,11 +83,10 @@ class MyClient(discord.Client):
             channel = self.get_channel(channel_id)
             if channel:
                 try: 
-                    scrape_kanji_images(f'N{i}')
-                    await channel.send(file=discord.File(self.kanji_png_path))
-                    await channel.send(file=discord.File(self.examples_png_path))
-                except NoExamplesException as e:
-                    await channel.send(file=discord.File(self.kanji_png_path))
+                    result = scrape_kanji_images(f'N{i}')
+                    await channel.send(file=discord.File(result['kanji_image_path']))
+                    if os.path.exists(result['kanji_examples_path']):
+                        await channel.send(file=discord.File(result['kanji_examples_path']))
                 except Exception as e:
                     print(f'Error occurred: {e}')
    
